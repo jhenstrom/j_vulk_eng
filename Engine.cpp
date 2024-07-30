@@ -1,10 +1,19 @@
 #include "Engine.hpp"
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include<glm/glm.hpp>
+
 #include <stdexcept>
 #include <array>
 #include<cassert>
 
 namespace vwdw {
+
+struct SimplePushConstantData {
+	glm::vec2 offset;
+	alignas(16) glm::vec3 color;
+};
 
 
 Engine::Engine()
@@ -21,6 +30,8 @@ Engine::~Engine()
 }
 
 void Engine::run() {
+	
+	//std::cout << "max push constants size: " << vDevice.properties.limits.maxPushConstantsSize() << std::endl;
 	while (!vWindow.shouldClose()) {
 		glfwPollEvents();
 		drawFrame();
@@ -31,12 +42,19 @@ void Engine::run() {
 
 void Engine::createPipelineLayout()
 {
+
+	VkPushConstantRange pushConstantRange{};
+	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+	pushConstantRange.offset = 0;
+	pushConstantRange.size = sizeof(SimplePushConstantData);
+
+
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.pSetLayouts = nullptr;
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.pPushConstantRanges = nullptr;
+	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 	pipelineLayoutInfo.setLayoutCount = 0;
-	pipelineLayoutInfo.pushConstantRangeCount = 0;
+	pipelineLayoutInfo.pushConstantRangeCount = 1;
 
 	if (vkCreatePipelineLayout(vDevice.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
 	{
@@ -104,6 +122,9 @@ void Engine::recreateSwapChain()
 
 void Engine::recordCommandBuffer(int imageIndex)
 {
+	static int frame = 0;
+	frame = (frame + 1) % 100000;
+
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -144,7 +165,15 @@ void Engine::recordCommandBuffer(int imageIndex)
 
 	vModel->bind(commandBuffers[imageIndex]);
 
-	vModel->draw(commandBuffers[imageIndex]);
+	for(int i = 3; i >=0; i--) //draw loop current makes 4 triangles
+	{
+		SimplePushConstantData push{};
+		push.offset = { -0.5f + frame * 0.00002f, -0.4f + i * 0.25f};
+		push.color = { 0.0f, 0.0f, 0.2f+0.2f * i };
+		vkCmdPushConstants(commandBuffers[imageIndex], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
+		vModel->draw(commandBuffers[imageIndex]);
+	}
+
 
 	vkCmdEndRenderPass(commandBuffers[imageIndex]);
 
