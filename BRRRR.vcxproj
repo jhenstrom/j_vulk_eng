@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="Engine.hpp" />
     <ClInclude Include="model.hpp" />
+    <ClInclude Include="vGameObject.hpp" />
     <ClInclude Include="v_swap_chain.hpp" />
     <ClInclude Include="VDevice.hpp" />
     <ClInclude Include="vwdw_pipeline.hpp" />

@@ -1,8 +1,10 @@
 #include "Engine.hpp"
 
+
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include<glm/glm.hpp>
+#include<glm/gtc/constants.hpp>
 
 #include <stdexcept>
 #include <array>
@@ -11,6 +13,7 @@
 namespace vwdw {
 
 struct SimplePushConstantData {
+	glm::mat2 transform;
 	glm::vec2 offset;
 	alignas(16) glm::vec3 color;
 };
@@ -18,7 +21,7 @@ struct SimplePushConstantData {
 
 Engine::Engine()
 {
-	loadModels();
+	loadGameObjects();
 	createPipelineLayout();
 	recreateSwapChain();
 	createCommandBuffers();
@@ -122,8 +125,6 @@ void Engine::recreateSwapChain()
 
 void Engine::recordCommandBuffer(int imageIndex)
 {
-	static int frame = 0;
-	frame = (frame + 1) % 100000;
 
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -161,25 +162,30 @@ void Engine::recordCommandBuffer(int imageIndex)
 
 	vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	vPipeline->bind(commandBuffers[imageIndex]);
-
-	vModel->bind(commandBuffers[imageIndex]);
-
-	for(int i = 3; i >=0; i--) //draw loop current makes 4 triangles
-	{
-		SimplePushConstantData push{};
-		push.offset = { -0.5f + frame * 0.00002f, -0.4f + i * 0.25f};
-		push.color = { 0.0f, 0.0f, 0.2f+0.2f * i };
-		vkCmdPushConstants(commandBuffers[imageIndex], pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
-		vModel->draw(commandBuffers[imageIndex]);
-	}
-
+	renderGameObjects(commandBuffers[imageIndex]);
 
 	vkCmdEndRenderPass(commandBuffers[imageIndex]);
 
 	if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS)
 	{
 		throw std::runtime_error("failed to record command buffer");
+	}
+}
+
+void Engine::renderGameObjects(VkCommandBuffer commandBuffer)
+{
+	vPipeline->bind(commandBuffer);
+
+	for (auto& obj : vGameObjects)
+	{
+		obj.transform.rotation = glm::mod(obj.transform.rotation + 0.001f, glm::two_pi<float>());
+		SimplePushConstantData push{};
+		push.offset = obj.transform.translation;
+		push.color = obj.color;
+		push.transform = obj.transform.mat2();
+		vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
+		obj.model->bind(commandBuffer);
+		obj.model->draw(commandBuffer);
 	}
 }
 
@@ -216,10 +222,19 @@ void Engine::drawFrame()
 
 }
 
-void Engine::loadModels()
+void Engine::loadGameObjects()
 {
 	std::vector<VModel::Vertex> verts{ {{0.0f,-0.5f}, {0.0f,0.0f,1.0f}}, {{0.5f,0.5f}, {1.0f,0.0f,0.0f}}, {{-0.5f, 0.5f}, {0.0f,1.0f,0.0f}} };
-	vModel = std::make_unique<VModel>(vDevice, verts);
+	auto vModel = std::make_shared<VModel>(vDevice, verts);
+
+	auto triangle = vGameObject::createGameObject();
+	triangle.model = vModel;
+	triangle.color = { 0.0f, 0.0f, 1.0f };
+	triangle.transform.translation.x = .2f;
+	triangle.transform.scale = { 2.0f, .5f};
+	triangle.transform.rotation = .25 * glm::two_pi<float>();
+
+	vGameObjects.push_back(std::move(triangle));
 }
 
 void Engine::freeCommandBuffers()

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VWindow.hpp"
+#include "vGameObject.hpp"
 #include "vwdw_pipeline.hpp"
 #include "VDevice.hpp"
 #include "v_swap_chain.hpp"
@@ -26,11 +27,12 @@ class Engine {
 		void run();
 	private:
 		void createPipelineLayout();
-		void loadModels();
+		void loadGameObjects();
 		void createPipeline();
 		void createCommandBuffers();
 		void drawFrame();
 		void freeCommandBuffers();
+		void renderGameObjects(VkCommandBuffer commandBuffer);
 
 
 		VWindow vWindow{ WIDTH, HEIGHT, "Vulkan_test" };
@@ -40,7 +42,7 @@ class Engine {
 		std::unique_ptr<VwdwPipeline> vPipeline;
 		VkPipelineLayout pipelineLayout;
 		std::vector<VkCommandBuffer> commandBuffers;
-		std::unique_ptr<VModel> vModel;
+		std::vector<vGameObject> vGameObjects;
 		void recreateSwapChain();
 		void recordCommandBuffer(int imageIndex);
 };
