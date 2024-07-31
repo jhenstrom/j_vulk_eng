@@ -2,10 +2,11 @@
 
 #include "VWindow.hpp"
 #include "vGameObject.hpp"
-#include "vwdw_pipeline.hpp"
 #include "VDevice.hpp"
-#include "v_swap_chain.hpp"
+#include "vRenderer.hpp"
 #include "model.hpp"
+#include "KalGen2D.hpp"
+#include "vRenderSystem.hpp"
 
 #include <memory>
 #include <vector>
@@ -26,25 +27,16 @@ class Engine {
 
 		void run();
 	private:
-		void createPipelineLayout();
 		void loadGameObjects();
-		void createPipeline();
-		void createCommandBuffers();
-		void drawFrame();
-		void freeCommandBuffers();
-		void renderGameObjects(VkCommandBuffer commandBuffer);
 
 
 		VWindow vWindow{ WIDTH, HEIGHT, "Vulkan_test" };
 		VDevice vDevice{ vWindow };
-		std::unique_ptr<VSwapChain> vSwapChain;
-		//VwdwPipeline pipeline{vDevice, VwdwPipeline::defaultConfig(WIDTH, HEIGHT), "Shaders/simple_shader.vert.spv",  "Shaders/simple_shader.frag.spv" };
-		std::unique_ptr<VwdwPipeline> vPipeline;
-		VkPipelineLayout pipelineLayout;
-		std::vector<VkCommandBuffer> commandBuffers;
+		VRenderer vRenderer{ vWindow, vDevice };
 		std::vector<vGameObject> vGameObjects;
-		void recreateSwapChain();
-		void recordCommandBuffer(int imageIndex);
+
+		//toys
+		KalGen2D* kalGen2D;
 };
 
 }

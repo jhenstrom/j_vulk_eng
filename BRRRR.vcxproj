@@ -135,18 +135,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="KalGen2D.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="vRenderer.cpp" />
+    <ClCompile Include="vRenderSystem.cpp" />
     <ClCompile Include="v_swap_chain.cpp" />
     <ClCompile Include="VDevice.cpp" />
     <ClCompile Include="vwdw_pipeline.cpp" />
     <ClCompile Include="VWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="KalGen2D.hpp" />
     <ClInclude Include="Engine.hpp" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="vGameObject.hpp" />
+    <ClInclude Include="vRenderer.hpp" />
+    <ClInclude Include="vRenderSystem.hpp" />
     <ClInclude Include="v_swap_chain.hpp" />
     <ClInclude Include="VDevice.hpp" />
     <ClInclude Include="vwdw_pipeline.hpp" />
