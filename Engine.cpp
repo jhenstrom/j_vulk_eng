@@ -174,11 +174,17 @@ void Engine::recordCommandBuffer(int imageIndex)
 
 void Engine::renderGameObjects(VkCommandBuffer commandBuffer)
 {
+
+	int i =0;
+	for (auto& obj: vGameObjects)
+	{
+		i += 1;
+		obj.transform.rotation = glm::mod(obj.transform.rotation + 0.00001f*i, 2.f*glm::pi<float>());
+	}
 	vPipeline->bind(commandBuffer);
 
 	for (auto& obj : vGameObjects)
 	{
-		obj.transform.rotation = glm::mod(obj.transform.rotation + 0.001f, glm::two_pi<float>());
 		SimplePushConstantData push{};
 		push.offset = obj.transform.translation;
 		push.color = obj.color;
@@ -227,14 +233,28 @@ void Engine::loadGameObjects()
 	std::vector<VModel::Vertex> verts{ {{0.0f,-0.5f}, {0.0f,0.0f,1.0f}}, {{0.5f,0.5f}, {1.0f,0.0f,0.0f}}, {{-0.5f, 0.5f}, {0.0f,1.0f,0.0f}} };
 	auto vModel = std::make_shared<VModel>(vDevice, verts);
 
-	auto triangle = vGameObject::createGameObject();
-	triangle.model = vModel;
-	triangle.color = { 0.0f, 0.0f, 1.0f };
-	triangle.transform.translation.x = .2f;
-	triangle.transform.scale = { 2.0f, .5f};
-	triangle.transform.rotation = .25 * glm::two_pi<float>();
+	std::vector<glm::vec3> colors{
+		{1.0f, 5.0f, 5.0f},
+		{1.0f, 1.0f, 5.0f},
+		{1.0f, 5.0f, 1.0f},
+		{5.0f, 1.0f, 5.0f},
+		{5.0f, 1.0f, 1.0f},
+		{5.0f, 5.0f, 1.0f}
+	};
 
-	vGameObjects.push_back(std::move(triangle));
+	for (auto& color: colors)
+	{
+		color = glm::mod(color, glm::vec3{2.2f});
+	}
+	for (int i=300; i >= 0; i--)
+	{
+		auto triangle = vGameObject::createGameObject();
+		triangle.model = vModel;
+		triangle.transform.scale = glm::vec2(.01f)+i*0.005f;
+		triangle.transform.rotation = i*glm::pi<float>()*.025f;
+		triangle.color = colors[i % colors.size()];
+		vGameObjects.push_back(std::move(triangle));
+	}
 }
 
 void Engine::freeCommandBuffers()
