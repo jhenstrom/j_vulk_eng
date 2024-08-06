@@ -22,6 +22,7 @@ namespace vwdw {
 		VRenderer& operator=(const VRenderer&) = delete;
 
 		VkRenderPass getSwapChainRenderPass() const { return vSwapChain->getRenderPass(); }
+		float getAspectRatio() const { return vSwapChain->extentAspectRatio(); }
 		bool isFrameInProgress() const { return isFrameStarted; }
 
 		VkCommandBuffer getCurrCBuffer() { 

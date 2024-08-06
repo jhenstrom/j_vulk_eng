@@ -14,13 +14,14 @@ namespace vwdw {
 		}
 	}
 
-	vGameObject KalGen2D::next(std::shared_ptr<VModel> model, int i)
-	{
-		auto triangle = vGameObject::createGameObject();
-		triangle.model = model;
-		triangle.transform.scale = base_scale + i * 0.005f;
-		triangle.transform.rotation = i * glm::pi<float>() * rotation_speed;
-		triangle.color = colors[i % colors.size()];
-		return triangle;
-	}
+	// broke with 3d update
+	//vGameObject KalGen2D::next(std::shared_ptr<VModel> model, int i)
+	//{
+	//	auto triangle = vGameObject: :createGameObject();
+	//	triangle.model = model;
+	//	triangle.transform.scale = base_scale + i * 0.005f;
+	//	triangle.transform.rotation = i * glm::pi<float>() * rotation_speed;
+	//	triangle.color = colors[i % colors.size()];
+	//	return triangle;
+	//}
 }

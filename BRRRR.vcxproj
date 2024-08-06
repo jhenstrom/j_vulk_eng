@@ -139,6 +139,7 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="vCamera.cpp" />
     <ClCompile Include="vRenderer.cpp" />
     <ClCompile Include="vRenderSystem.cpp" />
     <ClCompile Include="v_swap_chain.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="KalGen2D.hpp" />
     <ClInclude Include="Engine.hpp" />
     <ClInclude Include="model.hpp" />
+    <ClInclude Include="vCamera.hpp" />
     <ClInclude Include="vGameObject.hpp" />
     <ClInclude Include="vRenderer.hpp" />
     <ClInclude Include="vRenderSystem.hpp" />

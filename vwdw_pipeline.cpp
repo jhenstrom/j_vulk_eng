@@ -208,9 +208,10 @@ void VwdwPipeline::defaultConfig(PipelineConfigInfo &configInfo)
 	configInfo.depthStencilInfo.depthTestEnable = VK_TRUE;
 	configInfo.depthStencilInfo.stencilTestEnable = VK_FALSE;
 	configInfo.depthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-	configInfo.depthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS;
+	configInfo.depthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
+	//configInfo.depthStencilInfo.depthCompareOp = VK_COMPARE_OP_GREATER_OR_EQUAL;
 	configInfo.depthStencilInfo.depthBoundsTestEnable = VK_FALSE;
-	configInfo.depthStencilInfo.depthWriteEnable = VK_FALSE;
+	configInfo.depthStencilInfo.depthWriteEnable = VK_TRUE;
 	configInfo.depthStencilInfo.maxDepthBounds = 1.0f;
 	configInfo.depthStencilInfo.minDepthBounds = 0.0f;
 	configInfo.depthStencilInfo.front = {};
