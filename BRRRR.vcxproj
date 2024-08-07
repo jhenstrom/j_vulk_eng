@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="KalGen2D.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="keyboardController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="vCamera.cpp" />
@@ -150,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="KalGen2D.hpp" />
     <ClInclude Include="Engine.hpp" />
+    <ClInclude Include="keyboardController.hpp" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="vCamera.hpp" />
     <ClInclude Include="vGameObject.hpp" />

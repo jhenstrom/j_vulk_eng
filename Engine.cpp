@@ -1,5 +1,6 @@
 #include "Engine.hpp"
 #include "vCamera.hpp"
+#include "keyboardController.hpp"
 
 
 
@@ -9,6 +10,7 @@
 #include<glm/gtc/constants.hpp>
 
 #include <stdexcept>
+#include <chrono>
 #include <array>
 #include<cassert>
 
@@ -32,29 +34,40 @@ Engine::~Engine()
 void Engine::run() {
 	
 	//std::cout << "max push constants size: " << vDevice.properties.limits.maxPushConstantsSize() << std::endl;
-	VRenderSystem vRenderSystem{ vDevice, vRenderer.getSwapChainRenderPass() };
+    VRenderSystem vRenderSystem{ vDevice, vRenderer.getSwapChainRenderPass() };
     VCamera vCamera{};
-    // vCamera.setView(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
-    vCamera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
+    //vCamera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
+
+    auto viewerObj = vGameObject::createGameObject();
+    KeyboardController cameraController{};
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
 
 	while (!vWindow.shouldClose()) {
 		glfwPollEvents();
-		float aspect = vRenderer.getAspectRatio();
 
-    //vCamera.setOrthographicProjection(-aspect, aspect, -1.f, 1.f, -1.f, 1.f);
-    vCamera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
-    if (auto commandBuffer = vRenderer.beginFrame())
-		{
+        auto newTime = std::chrono::high_resolution_clock::now();
+        float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+        currentTime = newTime;
+
+        cameraController.moveInPlaneXZ(vWindow.getWindow(), frameTime, viewerObj);
+        vCamera.setViewXYZ(viewerObj.transform.translation, viewerObj.transform.rotation);
+
+	    float aspect = vRenderer.getAspectRatio();
+
+        vCamera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
+        if (auto commandBuffer = vRenderer.beginFrame())
+		    {
 			
 
-			vRenderer.beginSwapChainRenderPass(commandBuffer);
-			vRenderSystem.renderGameObjects(commandBuffer, vGameObjects, vCamera);
-			vRenderer.endSwapChainRenderPass(commandBuffer);
-			vRenderer.endFrame();
-		}
-	}
+			    vRenderer.beginSwapChainRenderPass(commandBuffer);
+			    vRenderSystem.renderGameObjects(commandBuffer, vGameObjects, vCamera);
+			    vRenderer.endSwapChainRenderPass(commandBuffer);
+			    vRenderer.endFrame();
+		    }
+	    }
 
-	vkDeviceWaitIdle(vDevice.device());
+	    vkDeviceWaitIdle(vDevice.device());
 }
 
 std::unique_ptr<VModel> createCubeModel(VDevice& device, glm::vec3 offset) {
