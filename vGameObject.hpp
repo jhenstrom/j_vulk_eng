@@ -10,7 +10,7 @@ namespace vwdw {
     struct TransformComponent {
         glm::vec3 translation{};
         glm::vec3 scale{1.f,1.f,1.f};
-        glm::vec3 rotation{ 1.f,1.f,1.f };
+        glm::vec3 rotation{};
         glm::mat4 mat4() {
             const float c3 = glm::cos(rotation.z);
             const float s3 = glm::sin(rotation.z);

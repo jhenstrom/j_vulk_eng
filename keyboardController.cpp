@@ -1,5 +1,7 @@
 #include "keyboardController.hpp"
 
+#include <iostream>
+
 namespace vwdw {
 
     void KeyboardController::moveInPlaneXZ(
@@ -12,6 +14,7 @@ namespace vwdw {
 
         if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon()) {
             gameObject.transform.rotation += lookSpeed * dt * glm::normalize(rotate);
+            std::cout << "Rot: " << gameObject.transform.rotation.x << " : " << gameObject.transform.rotation.y << " : " << gameObject.transform.rotation.z << std::endl;
         }
 
         // limit pitch values between about +/- 85ish degrees
@@ -33,6 +36,9 @@ namespace vwdw {
 
         if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()) {
             gameObject.transform.translation += moveSpeed * dt * glm::normalize(moveDir);
+            std::cout << "Pos: " << gameObject.transform.translation.x << " : " << gameObject.transform.translation.y << " : " << gameObject.transform.translation.z << std::endl;
+
         }
+
 	}
 }

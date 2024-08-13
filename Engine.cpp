@@ -55,7 +55,7 @@ void Engine::run() {
 
 	    float aspect = vRenderer.getAspectRatio();
 
-        vCamera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
+        vCamera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 1000.f);
         if (auto commandBuffer = vRenderer.beginFrame())
 		    {
 			
