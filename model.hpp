@@ -20,7 +20,12 @@ namespace vwdw {
 			static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
 		};
 
-		VModel(VDevice &device, const std::vector<Vertex> &verts);
+		struct Mesh {
+			std::vector<Vertex> vertices{};
+			std::vector<uint32_t> indices;
+		};
+
+		VModel(VDevice &device, const VModel::Mesh& mesh);
 		~VModel();
 
 		VModel(const VModel&) = delete;
@@ -32,11 +37,19 @@ namespace vwdw {
 
 	private:
 		void createVertexBuffers(const std::vector<Vertex>& verts);
+		void createIndexBuffers(const std::vector<uint32_t>& indices);
 
 		VDevice &vDevice;
+
 		VkBuffer vertexBuffer;
 		VkDeviceMemory vBufferMem;
 		uint32_t vertexCount;
+
+
+		bool hasindexBuffer = false;
+		VkBuffer indexBuffer;
+		VkDeviceMemory iBufferMem;
+		uint32_t indexCount;
 	};
 
 }
