@@ -141,6 +141,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="vCamera.cpp" />
+    <ClCompile Include="vGameObject.cpp" />
     <ClCompile Include="vRenderer.cpp" />
     <ClCompile Include="vRenderSystem.cpp" />
     <ClCompile Include="v_swap_chain.cpp" />

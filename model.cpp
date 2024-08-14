@@ -79,17 +79,12 @@ void VModel::Mesh::loadModel(const std::string& filePath)
 					attrib.vertices[3 * index.vertex_index + 2]
 				};
 
-				auto c_i = 3 * index.vertex_index + 2;
-				if(c_i <attrib.colors.size()){
-					vertex.color = {
-						attrib.colors[c_i - 2],
-						attrib.colors[c_i - 1],
-						attrib.colors[c_i - 0]
-					};
-				}
-				else{
-					vertex.color = { 0.5f, 0.5f, 0.5f };
-				}
+
+				vertex.color = {
+					attrib.colors[3 * index.vertex_index + 0],
+					attrib.colors[3 * index.vertex_index + 1],
+					attrib.colors[3 * index.vertex_index + 2]
+				};
 			}
 
 			if(index.normal_index >= 0){
@@ -200,16 +195,12 @@ std::vector<VkVertexInputBindingDescription> VModel::Vertex::getBindingDescripti
 
 std::vector<VkVertexInputAttributeDescription> VModel::Vertex::getAttributeDescriptions()
 {
-	std::vector<VkVertexInputAttributeDescription> attrDescriptions(2);
-	attrDescriptions[0].location = 0;
-	attrDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-	attrDescriptions[0].binding = 0;
-	attrDescriptions[0].offset = offsetof(Vertex, pos);
+	std::vector<VkVertexInputAttributeDescription> attrDescriptions{};
 
-	attrDescriptions[1].offset = offsetof(Vertex,color);
-	attrDescriptions[1].location = 1;
-	attrDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-	attrDescriptions[1].binding = 0;
+	attrDescriptions.push_back({0,0,VK_FORMAT_R32G32B32_SFLOAT,offsetof(Vertex, pos)});
+	attrDescriptions.push_back({1,0,VK_FORMAT_R32G32B32_SFLOAT,offsetof(Vertex, color)});
+	attrDescriptions.push_back({2,0,VK_FORMAT_R32G32B32_SFLOAT,offsetof(Vertex, normal)});
+	attrDescriptions.push_back({3,0,VK_FORMAT_R32G32_SFLOAT,offsetof(Vertex, uv)});
 	return attrDescriptions;
 }
 

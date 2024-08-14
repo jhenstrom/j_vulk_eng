@@ -15,7 +15,7 @@ namespace vwdw {
 
 	struct SimplePushConstantData {
 		glm::mat4 transform{1.f};
-		alignas(16) glm::vec3 color;
+		glm::mat4 normalMat{1.f};
 	};
 
 
@@ -74,8 +74,9 @@ namespace vwdw {
 		for (auto& obj : gameObjects)
 		{
 			SimplePushConstantData push{};
-			push.color = obj.color;
-			push.transform = projectionView * obj.transform.mat4(); //usually send both mat to shaders // also transforms to camera space
+			auto modelmat = obj.transform.mat4();
+			push.transform = projectionView * modelmat; //usually send both mat to shaders // also transforms to camera space
+			push.normalMat = obj.transform.normalMat();
 			vkCmdPushConstants(commandBuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(SimplePushConstantData), &push);
 			obj.model->bind(commandBuffer);
 			obj.model->draw(commandBuffer);
