@@ -123,9 +123,10 @@ std::unique_ptr<VModel> createCubeModel(VDevice& device, glm::vec3 offset) {
 void Engine::loadGameObjects()
 {
 
-	std::shared_ptr<VModel> cubeModel = createCubeModel(vDevice, {0.f, 0.f, 0.f});
+	// std::shared_ptr<VModel> cubeModel = createCubeModel(vDevice, {0.f, 0.f, 0.f});
+  std::shared_ptr<VModel> model = VModel::createModelFromFile(vDevice, "models/smooth_vase.obj");
 	auto cube = vGameObject::createGameObject();
-	cube.model = cubeModel;
+	cube.model = model;
 	cube.transform.translation = {0.f, 0.f, 2.5f};
     cube.transform.scale = {.5f, .5f, .5f};
 	vGameObjects.push_back(std::move(cube));

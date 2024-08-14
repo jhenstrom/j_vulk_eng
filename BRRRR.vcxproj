@@ -147,12 +147,14 @@
     <ClCompile Include="VDevice.cpp" />
     <ClCompile Include="vwdw_pipeline.cpp" />
     <ClCompile Include="VWindow.cpp" />
+    <ClCompile Include="v_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KalGen2D.hpp" />
     <ClInclude Include="Engine.hpp" />
     <ClInclude Include="keyboardController.hpp" />
     <ClInclude Include="model.hpp" />
+    <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="vCamera.hpp" />
     <ClInclude Include="vGameObject.hpp" />
     <ClInclude Include="vRenderer.hpp" />
@@ -161,6 +163,7 @@
     <ClInclude Include="VDevice.hpp" />
     <ClInclude Include="vwdw_pipeline.hpp" />
     <ClInclude Include="VWindow.hpp" />
+    <ClInclude Include="v_utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="make_shaders.bat" />
