@@ -1,6 +1,7 @@
 #include "Engine.hpp"
 #include "vCamera.hpp"
 #include "keyboardController.hpp"
+#include "vBuffer.hpp"
 
 
 
@@ -15,6 +16,11 @@
 #include<cassert>
 
 namespace vwdw {
+
+	struct GlobalUbo {
+		glm::mat4 viewProj{1.f};
+		glm::vec3 lightPos = glm::normalize(glm::vec3(1.f, -3.f, -1.f));
+	};
 
 
 Engine::Engine()
@@ -32,6 +38,9 @@ Engine::~Engine()
 }
 
 void Engine::run() {
+
+	VBuffer globalUboBuffer{ vDevice, sizeof(GlobalUbo), VSwapChain::MAX_FRAMES_IN_FLIGHT, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, vDevice.properties.limits.minUniformBufferOffsetAlignment };
+	globalUboBuffer.map();
 	
 	//std::cout << "max push constants size: " << vDevice.properties.limits.maxPushConstantsSize() << std::endl;
     VRenderSystem vRenderSystem{ vDevice, vRenderer.getSwapChainRenderPass() };
@@ -58,8 +67,14 @@ void Engine::run() {
         vCamera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
         if (auto commandBuffer = vRenderer.beginFrame())
 		    {
-			
+				int frameIndex = vRenderer.getFrameIndex();
+				//update objs in mem
+				GlobalUbo globalUbo{};
+				globalUbo.viewProj = vCamera.getViewProj() * vCamera.getView();
+				globalUboBuffer.writeToIndex(&globalUbo, frameIndex);
+				globalUboBuffer.flushIndex(frameIndex);	
 
+				//render
 			    vRenderer.beginSwapChainRenderPass(commandBuffer);
 			    vRenderSystem.renderGameObjects(commandBuffer, vGameObjects, vCamera);
 			    vRenderer.endSwapChainRenderPass(commandBuffer);

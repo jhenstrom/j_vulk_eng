@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VDevice.hpp"
+#include "vBuffer.hpp"
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include<glm/glm.hpp>
@@ -52,14 +53,12 @@ namespace vwdw {
 
 		VDevice &vDevice;
 
-		VkBuffer vertexBuffer;
-		VkDeviceMemory vBufferMem;
+		std::unique_ptr<VBuffer> vertexBuffer;
 		uint32_t vertexCount;
 
 
 		bool hasindexBuffer = false;
-		VkBuffer indexBuffer;
-		VkDeviceMemory iBufferMem;
+		std::unique_ptr<VBuffer> indexBuffer;
 		uint32_t indexCount;
 	};
 

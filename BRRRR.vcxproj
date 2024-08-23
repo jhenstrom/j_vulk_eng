@@ -140,6 +140,7 @@
     <ClCompile Include="keyboardController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="vBuffer.cpp" />
     <ClCompile Include="vCamera.cpp" />
     <ClCompile Include="vGameObject.cpp" />
     <ClCompile Include="vRenderer.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="keyboardController.hpp" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="vBuffer.hpp" />
     <ClInclude Include="vCamera.hpp" />
     <ClInclude Include="vGameObject.hpp" />
     <ClInclude Include="vRenderer.hpp" />
