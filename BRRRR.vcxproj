@@ -159,6 +159,7 @@
     <ClInclude Include="tiny_obj_loader.h" />
     <ClInclude Include="vBuffer.hpp" />
     <ClInclude Include="vCamera.hpp" />
+    <ClInclude Include="vFrameInfo.hpp" />
     <ClInclude Include="vGameObject.hpp" />
     <ClInclude Include="vRenderer.hpp" />
     <ClInclude Include="vRenderSystem.hpp" />

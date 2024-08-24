@@ -2,6 +2,7 @@
 #include "vCamera.hpp"
 #include "keyboardController.hpp"
 #include "vBuffer.hpp"
+#include "vFrameInfo.hpp"
 
 
 
@@ -68,15 +69,17 @@ void Engine::run() {
         if (auto commandBuffer = vRenderer.beginFrame())
 		    {
 				int frameIndex = vRenderer.getFrameIndex();
+
+				FrameInfo frameInfo{ frameIndex, commandBuffer, vCamera, frameTime };
 				//update objs in mem
 				GlobalUbo globalUbo{};
-				globalUbo.viewProj = vCamera.getViewProj() * vCamera.getView();
+				globalUbo.viewProj = vCamera.getProjection() * vCamera.getView();
 				globalUboBuffer.writeToIndex(&globalUbo, frameIndex);
 				globalUboBuffer.flushIndex(frameIndex);	
 
 				//render
 			    vRenderer.beginSwapChainRenderPass(commandBuffer);
-			    vRenderSystem.renderGameObjects(commandBuffer, vGameObjects, vCamera);
+			    vRenderSystem.renderGameObjects(frameInfo, vGameObjects);
 			    vRenderer.endSwapChainRenderPass(commandBuffer);
 			    vRenderer.endFrame();
 		    }
@@ -93,14 +96,14 @@ void Engine::loadGameObjects()
 	auto cube = vGameObject::createGameObject();
 	cube.model = model;
 	cube.transform.translation = {0.2f, 0.f, 2.5f};
-    cube.transform.scale = {1.f, .5f, .5f};
+    cube.transform.scale = {1.f, 1.f, 1.f};
 	vGameObjects.push_back(std::move(cube));
 
 	std::shared_ptr<VModel> model2 = VModel::createModelFromFile(vDevice, "models/flat_vase.obj");
 	auto cube2 = vGameObject::createGameObject();
 	cube2.model = model2;
 	cube2.transform.translation = { -0.2f, 0.f, 2.5f };
-	cube2.transform.scale = { 1.f, .5f, .5f };
+	cube2.transform.scale = { 1.f, 1.f, 1.f };
 	vGameObjects.push_back(std::move(cube2));
 
 }

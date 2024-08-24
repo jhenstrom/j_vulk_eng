@@ -6,6 +6,7 @@
 #include "model.hpp"
 #include "KalGen2D.hpp"
 #include "vCamera.hpp"
+#include "vFrameInfo.hpp"
 
 #include <memory>
 #include <vector>
@@ -22,7 +23,7 @@ namespace vwdw {
 		VRenderSystem(const VRenderSystem&) = delete;
 		VRenderSystem& operator=(const VRenderSystem&) = delete;
 
-		void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<vGameObject> &gameObjects, const VCamera &camera);
+		void renderGameObjects(FrameInfo &frameInfo, std::vector<vGameObject> &gameObjects);
 
 	private:
 		void createPipelineLayout();
